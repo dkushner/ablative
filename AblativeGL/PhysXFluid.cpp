@@ -51,13 +51,6 @@ void PhysXFluid::LoadResources()
 		camera = new Camera(WindowWidth(), WindowHeight());
 		camera->Position.z = -50.0f;
 
-		cout << *effect << endl;
-		if(glIsProgram(*effect))
-			cout << "Program." << endl;
-		else if(glIsShader(*effect))
-			cout << "Shader." << endl;
-		(*effect)();
-
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 		glGenBuffers(2, vbo);

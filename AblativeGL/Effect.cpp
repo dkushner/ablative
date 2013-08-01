@@ -63,6 +63,8 @@ Effect::Effect(const char* vertFile, const char* fragFile)
 		std::cout << log << std::endl;
 		throw std::logic_error(log);	
 	}
+
+	PrintActiveAttributes();
 }
 Effect::Effect(const char* vertFile, const char* geomFile, const char* fragFile)
 {
@@ -147,4 +149,193 @@ GLuint Effect::Compile(GLuint type, const char* source)
 		return false;
 	}
 	return shader;
+}
+
+GLuint Effect::GetAttributeIndex(const char* name)
+{
+	GLuint loc = glGetAttribLocation(program, name);
+	if(loc > -1)
+		attribute_map[name] = loc;
+	
+	return loc;
+}
+
+void Effect::SetUniform(const char* name, glm::vec3& v)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+	
+	glUniform3fv(loc, 1, glm::value_ptr(v));
+}
+void Effect::SetUniform(const char* name, glm::vec4& v)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+
+	glUniform4fv(loc, 1, glm::value_ptr(v));
+}
+void Effect::SetUniform(const char* name, bool transpose, glm::mat3& m)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+
+	glUniformMatrix3fv(loc, 1, transpose, glm::value_ptr(m));
+}
+void Effect::SetUniform(const char* name, bool transpose, glm::mat4& m)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+	
+	glUniformMatrix4fv(loc, 1, transpose, glm::value_ptr(m));
+}
+void Effect::SetUniform(const char* name, GLfloat f)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+
+	glUniform1f(loc, f);
+}
+void Effect::SetUniform(const char* name, GLint i)
+{
+	GLuint loc;
+	ResourceIterator itr = uniform_map.find(name);
+	if(itr == uniform_map.end())
+	{
+		loc = glGetUniformLocation(program, name);
+		uniform_map[name] = loc;
+	}
+	else
+		loc = itr->second;
+
+	glUniform1i(loc, i);
+}
+
+void Effect::PrintActiveAttributes()
+{
+	GLint attrib_count;
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTES, &attrib_count);
+
+	GLchar* name;
+	GLint name_length;
+	GLint size;
+	GLenum type;
+
+	glGetProgramiv(program, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &name_length);
+	name = (GLchar*)malloc(name_length);
+
+	printf("\n----------ATTRIBUTES-----------\n");
+	for(int atr = 0; atr < attrib_count; atr++)
+	{
+		glGetActiveAttrib(program, atr, name_length, NULL, &size, &type, name);
+		
+		printf("Name: %s\n", name);
+		printf("Size: %d\n", size);
+		switch(type)
+		{
+			case GL_FLOAT:
+				printf("Type: float\n");
+				break;
+			case GL_FLOAT_VEC2:
+				printf("Type: vec2\n");
+				break;
+			case GL_FLOAT_VEC3:
+				printf("Type: vec3\n");
+				break;
+			case GL_FLOAT_VEC4:
+				printf("Type: vec4\n");
+				break;
+			case GL_FLOAT_MAT3:
+				printf("Type: mat3\n");
+				break;
+			case GL_FLOAT_MAT4:
+				printf("Type: mat4\n");
+				break;
+			default:
+				printf("Type: %d(unknown)\n", type);
+				break;
+		}
+		printf("\n");
+	}
+}
+void Effect::PrintActiveUniforms()
+{
+	GLint uniform_count;
+	glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &uniform_count);
+
+	GLchar* name;
+	GLint name_length;
+	GLint size;
+	GLenum type;
+
+	glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &name_length);
+	name = (GLchar*)malloc(name_length);
+
+	printf("\n-----------UNIFORMS-----------\n");
+	for(int uni = 0; uni < uniform_count; uni++)
+	{
+		glGetActiveUniform(program, uni, name_length, NULL, &size, &type, name);
+		
+		printf("Name: %s\n", name);
+		printf("Size: %d\n", size);
+		switch(type)
+		{
+			case GL_FLOAT:
+				printf("Type: float\n");
+				break;
+			case GL_FLOAT_VEC2:
+				printf("Type: vec2\n");
+				break;
+			case GL_FLOAT_VEC3:
+				printf("Type: vec3\n");
+				break;
+			case GL_FLOAT_VEC4:
+				printf("Type: vec4\n");
+				break;
+			case GL_FLOAT_MAT3:
+				printf("Type: mat3\n");
+				break;
+			case GL_FLOAT_MAT4:
+				printf("Type: mat4\n");
+				break;
+			default:
+				printf("Type: %d(unknown)\n", type);
+				break;
+		}
+		printf("\n");
+	}
 }

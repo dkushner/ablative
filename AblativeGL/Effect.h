@@ -7,7 +7,10 @@
 #include <fstream>
 #include <stdexcept>
 #include <map>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
+typedef std::map<std::string, GLuint>::iterator ResourceIterator;
 
 class Effect
 {
@@ -17,6 +20,15 @@ class Effect
 		Effect(const char*, const char*);
 		Effect(const char*, const char*, const char*);
 		~Effect();
+
+		GLuint GetAttributeIndex(const char*);
+
+		void SetUniform(const char*, glm::vec3&);
+		void SetUniform(const char*, glm::vec4&);
+		void SetUniform(const char*, bool transpose, glm::mat3&);
+		void SetUniform(const char*, bool transpose, glm::mat4&);
+		void SetUniform(const char*, GLfloat);
+		void SetUniform(const char*, GLint);
 
 		operator GLuint()
 		{
@@ -34,6 +46,8 @@ class Effect
 		std::map<std::string, GLuint> attribute_map;
 
 		GLuint Compile(GLuint type, const char* source);
+		void PrintActiveUniforms();
+		void PrintActiveAttributes();
 
 		GLuint attribute_index;
 		GLuint vertex_shader;
