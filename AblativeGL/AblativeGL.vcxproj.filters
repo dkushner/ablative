@@ -36,6 +36,9 @@
     <ClCompile Include="PhysXFluid.cpp">
       <Filter>Source Files\Simulations</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Source Files\Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Configuration.h">
@@ -56,6 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.yaml">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicVertex.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="BasicFragment.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

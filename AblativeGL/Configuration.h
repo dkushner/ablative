@@ -10,6 +10,7 @@ class Configuration
 {
   public:
 		Configuration();
+		Configuration(const char*);
     ~Configuration();
 
     int WindowWidth;

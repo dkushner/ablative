@@ -6,6 +6,7 @@ void PhysXFluid::Initialize()
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
@@ -26,7 +27,6 @@ void PhysXFluid::Initialize()
 		return;
 	}
 }
-
 void PhysXFluid::LoadResources()
 {
 	const GLfloat pyramid[15] = 
@@ -46,33 +46,10 @@ void PhysXFluid::LoadResources()
 			1.0,  1.0,  0.0 
 		};
 
-		const GLchar* default_vertex[] = 
-		{
-			"#version 330\n",
-			"uniform mat4x4 MVP;\n",
-			"in vec3 in_Position;\n",
-			"in vec3 in_Color;\n",
-			"out vec3 ex_Color;\n",
-			"void main(void) {\n",
-			"	gl_Position = MVP * vec4(in_Position, 1.0);\n",
-			"	ex_Color = in_Color;\n",
-			"}"
-		};
-
-		const GLchar* default_fragment[] =
-		{
-			"#version 330\n",
-			"precision highp float;\n",
-			"in vec3 ex_Color;\n",
-			"out vec4 gl_FragColor;\n",
-			"void main(void) {\n",
-			"	gl_FragColor = vec4(ex_Color, 1.0);\n",
-			"}"
-		};
-
 		rot_acc = 0.0f;
-		effect = new Effect(default_vertex, default_fragment);
+		effect = new Effect("BasicVertex.vert", "BasicFragment.frag");
 		camera = new Camera(WindowWidth(), WindowHeight());
+		camera->Position.z = -50.0f;
 
 		cout << *effect << endl;
 		if(glIsProgram(*effect))
@@ -103,10 +80,6 @@ void PhysXFluid::Render()
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	printf("Position: (%f, %f, %f)\n", camera->Position.x, camera->Position.y, camera->Position.z);
-	printf("Rotation: (%f, %f, %f)\n", camera->Rotation.x, camera->Rotation.y, camera->Rotation.z);
-	printf("LookAt: (%f, %f, %f)\n", camera->LookTarget.x, camera->LookTarget.y, camera->LookTarget.z);
 
 	glm::mat4 identity(1.0f);
 	glm::mat4 translation = glm::translate(identity, glm::vec3(0.0f, 0.0f, -20.0f));

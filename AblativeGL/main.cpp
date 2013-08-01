@@ -5,10 +5,7 @@
 
 int main(int argc, char** argv) 
 {
-	Configuration config;
-	config.WindowWidth = 800;
-	config.WindowHeight = 600;
-	config.WindowTitle = "AblativeGL";
+	Configuration config("config.yaml");
 
 	PhysXFluid sim;
 	sim.Run(config);
