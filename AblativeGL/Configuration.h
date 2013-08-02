@@ -16,6 +16,7 @@ class Configuration
     int WindowWidth;
     int WindowHeight;
     string WindowTitle;
+	bool Fullscreen;
 };
 
 #endif
