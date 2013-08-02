@@ -64,6 +64,11 @@ void Simulation::CreateContext()
 														config.WindowHeight,
 														SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
+	if(config.Fullscreen)
+	{
+		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+	}
+
 	if(!window)
 	{
 		fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());

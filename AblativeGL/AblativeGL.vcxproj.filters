@@ -39,6 +39,12 @@
     <ClCompile Include="Effect.cpp">
       <Filter>Source Files\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Icosphere.cpp">
+      <Filter>Source Files\Simulations</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetGenerator.cpp">
+      <Filter>Source Files\Simulations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Configuration.h">
@@ -56,6 +62,18 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Icosphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FreelookCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrbitCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.yaml">
@@ -65,6 +83,12 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="BasicFragment.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="diffuse.frag">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="diffuse.vert">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
