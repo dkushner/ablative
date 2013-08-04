@@ -1,11 +1,9 @@
 #version 330 core
 
-
-precision highp float;
 out vec4 out_Color;
-in float light;
+in vec3 color;
 
 void main (void)
 {
-	out_Color = vec4(0.6*light, 0.6*light, 0.6*light, 1.0);
+	out_Color = vec4(color.xyz, 1.0);
 }

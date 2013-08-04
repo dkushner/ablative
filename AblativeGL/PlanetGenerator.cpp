@@ -1,124 +1,23 @@
 #include "PlanetGenerator.h"
 
-void cubizePoint2(glm::vec3& position)
+void PlanetGenerator::MoveFoward()
 {
-    double x,y,z;
-    x = position.x;
-    y = position.y;
-    z = position.z;
+	viewMatrix *= glm::translate(0.0f, 0.0f, 1.0f);
+}
 
-    double fx, fy, fz;
-    fx = fabsf(x);
-    fy = fabsf(y);
-    fz = fabsf(z);
+void PlanetGenerator::MoveBack()
+{
+	viewMatrix *= glm::translate(0.0f, 0.0f, -1.0f);
+}
 
-    const double inverseSqrt2 = 0.70710676908493042;
+void PlanetGenerator::MoveLeft()
+{
+	worldMatrix = glm::rotate(worldMatrix, -0.1f, glm::vec3(0, 1, 0));
+}
 
-    if (fy >= fx && fy >= fz) {
-        double a2 = x * x * 2.0;
-        double b2 = z * z * 2.0;
-        double inner = -a2 + b2 -3;
-        double innersqrt = -sqrtf((inner * inner) - 12.0 * a2);
-
-        if(x == 0.0 || x == -0.0) { 
-            position.x = 0.0; 
-        }
-        else {
-            position.x = sqrtf(innersqrt + a2 - b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(z == 0.0 || z == -0.0) {
-            position.z = 0.0;
-        }
-        else {
-            position.z = sqrtf(innersqrt - a2 + b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(position.x > 1.0) position.x = 1.0;
-        if(position.z > 1.0) position.z = 1.0;
-
-        if(x < 0) position.x = -position.x;
-        if(z < 0) position.z = -position.z;
-
-        if (y > 0) {
-            // top face
-            position.y = 1.0;
-        }
-        else {
-            // bottom face
-            position.y = -1.0;
-        }
-    }
-    else if (fx >= fy && fx >= fz) {
-        double a2 = y * y * 2.0;
-        double b2 = z * z * 2.0;
-        double inner = -a2 + b2 -3;
-        double innersqrt = -sqrtf((inner * inner) - 12.0 * a2);
-
-        if(y == 0.0 || y == -0.0) { 
-            position.y = 0.0; 
-        }
-        else {
-            position.y = sqrtf(innersqrt + a2 - b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(z == 0.0 || z == -0.0) {
-            position.z = 0.0;
-        }
-        else {
-            position.z = sqrtf(innersqrt - a2 + b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(position.y > 1.0) position.y = 1.0;
-        if(position.z > 1.0) position.z = 1.0;
-
-        if(y < 0) position.y = -position.y;
-        if(z < 0) position.z = -position.z;
-
-        if (x > 0) {
-            // right face
-            position.x = 1.0;
-        }
-        else {
-            // left face
-            position.x = -1.0;
-        }
-    }
-    else {
-        double a2 = x * x * 2.0;
-        double b2 = y * y * 2.0;
-        double inner = -a2 + b2 -3;
-        double innersqrt = -sqrtf((inner * inner) - 12.0 * a2);
-
-        if(x == 0.0 || x == -0.0) { 
-            position.x = 0.0; 
-        }
-        else {
-            position.x = sqrtf(innersqrt + a2 - b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(y == 0.0 || y == -0.0) {
-            position.y = 0.0;
-        }
-        else {
-            position.y = sqrtf(innersqrt - a2 + b2 + 3.0) * inverseSqrt2;
-        }
-
-        if(position.x > 1.0) position.x = 1.0;
-        if(position.y > 1.0) position.y = 1.0;
-
-        if(x < 0) position.x = -position.x;
-        if(y < 0) position.y = -position.y;
-
-        if (z > 0) {
-            // front face
-            position.z = 1.0;
-        }
-        else {
-            // back face
-            position.z = -1.0;
-        }
-	}
+void PlanetGenerator::MoveRight()
+{
+	worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
 }
 
 void PlanetGenerator::Initialize()
@@ -151,7 +50,7 @@ void PlanetGenerator::Initialize()
 
 void PlanetGenerator::LoadResources()
 {
-		planet = new Icosphere(8);	
+		planet = new Icosphere(7);	
 		camera = new Camera(WindowWidth(), WindowHeight());
 		effect = new Effect("diffuse.vert", "diffuse.frag");
 
@@ -183,6 +82,9 @@ void PlanetGenerator::LoadResources()
 
 		planet->GenerateNormals();
 
+		worldMatrix = glm::scale(glm::vec3(1000, 1000, 1000));
+		viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1100.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 		glGenBuffers(3, vbo);
@@ -202,9 +104,17 @@ void PlanetGenerator::LoadResources()
 		glVertexAttribPointer(3, 1, GL_UNSIGNED_INT, GL_FALSE, 0, 0);
 		glEnableVertexAttribArray(3);
 		glEnable(GL_DEPTH_TEST);
+
+		input.RegisterKeyEvent(SDLK_w, std::bind(&PlanetGenerator::MoveFoward, this));
+		input.RegisterKeyEvent(SDLK_s, std::bind(&PlanetGenerator::MoveBack, this));
+		input.RegisterKeyEvent(SDLK_a, std::bind(&PlanetGenerator::MoveLeft, this));
+		input.RegisterKeyEvent(SDLK_d, std::bind(&PlanetGenerator::MoveRight, this));
 }
 
-void PlanetGenerator::PreRender(){}
+void PlanetGenerator::PreRender()
+{
+	input.DoKeyEvents();
+}
 
 void PlanetGenerator::Render()
 {
@@ -212,10 +122,9 @@ void PlanetGenerator::Render()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
-	glm::mat4 view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 projection = glm::perspective(45.0f, (float)WindowWidth() / (float)WindowHeight(), 1.0f, 1000.0f);
-	glm::mat4 mvp = projection * view * worldMatrix;
+	//worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
+	glm::mat4 projection = glm::perspective(45.0f, (float)WindowWidth() / (float)WindowHeight(), 1.0f, 100000.0f);
+	glm::mat4 mvp = projection * viewMatrix * worldMatrix;
 
 	effect->SetUniform("MVP", false, mvp);
 
@@ -223,6 +132,29 @@ void PlanetGenerator::Render()
 	SDL_GL_SwapWindow(window);
 }
 
-void PlanetGenerator::PostRender(){}
+void PlanetGenerator::PostRender()
+{
+}
 
 void PlanetGenerator::UnloadResources(){}
+
+void PlanetGenerator::OnKeyDown(Uint8 state, SDL_Keysym key)
+{
+	switch(key.sym)
+	{
+		case SDLK_w:
+			viewMatrix *= glm::translate(0.0f, 0.0f, 1.0f);
+			break;
+		case SDLK_s:
+			viewMatrix *= glm::translate(0.0f, 0.0f, -1.0f);
+			break;
+		case SDLK_a:
+			worldMatrix = glm::rotate(worldMatrix, -0.1f, glm::vec3(0, 1, 0));
+			break;
+		case SDLK_d:
+			worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
+			break;
+		default:
+			break;
+	}
+}

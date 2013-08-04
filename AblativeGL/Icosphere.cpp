@@ -95,7 +95,10 @@ void Icosphere::GenerateNormals()
 		glm::vec3 second_edge = vertex_c - vertex_a;
 
 		glm::vec3 normal = glm::cross(first_edge, second_edge);
-		normal = glm::normalize(normal);
+		if(glm::length(normal) > 0.0f)
+		{
+			normal = glm::normalize(normal);
+		}
 
 		normals[faces[i].v1] += normal;
 		normals[faces[i].v2] += normal;
@@ -105,7 +108,10 @@ void Icosphere::GenerateNormals()
 	//Normalize again due to addition of normals
 	for(unsigned int i = 0; i < normals.size(); i++)
 	{
-		normals[i] = glm::normalize(normals[i]);
+		if(glm::length(normals[i]) > 0.0f)
+		{
+			normals[i] = glm::normalize(normals[i]);
+		}
 	}
 }
 

@@ -41,10 +41,10 @@ void Simulation::Run(Configuration& config)
 					OnMouseMove(event.motion.state, event.motion.x, event.motion.y, event.motion.xrel, event.motion.yrel);
 					break;
 				case SDL_KEYDOWN:
-					OnKeyDown(event.key.state, event.key.keysym);
+					Input::KeyPressed(event.key.keysym);
 					break;
 				case SDL_KEYUP:
-					OnKeyUp(event.key.state, event.key.keysym);
+					Input::KeyReleased(event.key.keysym);
 					break;
 				default:
 					break;

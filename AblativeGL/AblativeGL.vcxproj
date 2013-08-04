@@ -15,10 +15,12 @@
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Icosphere.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysXFluid.cpp" />
     <ClCompile Include="PlanetGenerator.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SphereMapping.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -26,10 +28,12 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="FreelookCamera.h" />
     <ClInclude Include="Icosphere.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="OrbitCamera.h" />
     <ClInclude Include="PhysXFluid.h" />
     <ClInclude Include="PlanetGenerator.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SphereMapping.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicFragment.frag" />
