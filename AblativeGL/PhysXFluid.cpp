@@ -50,7 +50,7 @@ void PhysXFluid::LoadResources()
 		effect = new Effect("BasicVertex.vert", "BasicFragment.frag");
 		camera = new Camera(WindowWidth(), WindowHeight());
 		camera->Position.z = -50.0f;
-
+		
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
 		glGenBuffers(2, vbo);
@@ -66,11 +66,11 @@ void PhysXFluid::LoadResources()
 		glEnableVertexAttribArray(1);
 
 		glEnable(GL_DEPTH_TEST);
-
 }
 void PhysXFluid::PreRender(){}
 void PhysXFluid::Render()
 {
+	(*effect)();
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -79,8 +79,7 @@ void PhysXFluid::Render()
 	glm::mat4 rotation = glm::rotate(translation, rot_acc, glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 mvp = camera->GetProjectionMatrix() * camera->GetViewMatrix() * rotation;
 
-	int mvpIndex = glGetUniformLocation(*effect, "MVP");
-	glUniformMatrix4fv(mvpIndex, 1, GL_FALSE, glm::value_ptr(mvp));
+	effect->SetUniform("MVP", false, mvp);
 
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 5);
 	SDL_GL_SwapWindow(window);

@@ -61,10 +61,11 @@ Effect::Effect(const char* vertFile, const char* fragFile)
 		std::string log(length, ' ');
 		glGetProgramInfoLog(program, length, &length, &log[0]);
 		std::cout << log << std::endl;
-		throw std::logic_error(log);	
+		throw std::logic_error(log);
 	}
 
 	PrintActiveAttributes();
+	PrintActiveUniforms();
 }
 Effect::Effect(const char* vertFile, const char* geomFile, const char* fragFile)
 {

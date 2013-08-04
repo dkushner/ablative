@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include "Configuration.h"
+#include "Input.h"
 
 #define FPS_RESOLUTION 10
 
