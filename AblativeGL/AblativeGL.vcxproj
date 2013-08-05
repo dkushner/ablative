@@ -14,21 +14,34 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="FreelookCamera.cpp" />
+    <ClCompile Include="Icosphere.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PhysXFluid.cpp" />
+    <ClCompile Include="PlanetGenerator.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SphereMapping.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Configuration.h" />
     <ClInclude Include="Effect.h" />
+    <ClInclude Include="FreelookCamera.h" />
+    <ClInclude Include="Icosphere.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="OrbitCamera.h" />
     <ClInclude Include="PhysXFluid.h" />
+    <ClInclude Include="PlanetGenerator.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SphereMapping.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicFragment.frag" />
     <None Include="BasicVertex.vert" />
     <None Include="config.yaml" />
+    <None Include="diffuse.frag" />
+    <None Include="diffuse.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5B1244DE-2AB9-4B8A-AEA9-06AF8B7BDF51}</ProjectGuid>
@@ -59,8 +72,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Dependencies\yaml-cpp-0.5.1\include;C:\Dependencies\SDL-2.0.0-7524\include;C:\Dependencies\boost_1_54_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Dependencies\yaml-cpp-0.5.1\Debug;C:\Dependencies\SDL-2.0.0-7524\VisualC\SDLmain\Win32\Debug;C:\Dependencies\SDL-2.0.0-7524\VisualC\SDL\Win32\Debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Dependencies\libnoise\include;C:\Dependencies\glm-0.9.4.4;C:\Dependencies\glew-1.9.0\include;C:\Dependencies\yaml-cpp-0.5.1\include;C:\Dependencies\SDL-2.0.0-7524\include;C:\Dependencies\boost_1_54_0;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dependencies\libnoise;C:\Dependencies\glew-1.9.0\lib;C:\Dependencies\yaml-cpp-0.5.1\Debug;C:\Dependencies\SDL-2.0.0-7524\VisualC\SDLmain\Win32\Debug;C:\Dependencies\SDL-2.0.0-7524\VisualC\SDL\Win32\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -73,7 +86,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalDependencies>libyaml-cppmdd.lib;glew32.lib;OpenGL32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libyaml-cppmdd.lib;glew32.lib;OpenGL32.lib;SDL2.lib;SDL2main.lib;libnoise.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
