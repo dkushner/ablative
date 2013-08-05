@@ -14,15 +14,13 @@ public:
 	void RegisterKeyEvent(SDL_Keycode key, std::function<void()> func);
 	void UnregisterKeyEvent(SDL_Keycode key);
 
-	void DoKeyEvents();
+	void RegisterMouseMoveEvent(std::function<void(int, int, int, int)> func);
 
-	//Backend
-	static void KeyPressed(SDL_Keysym key);
-	static void KeyReleased(SDL_Keysym key);
+	void DoKeyEvents();
 
 private:
 	std::map<SDL_Scancode, std::function<void()>> function_map;
-	static bool keyStates[512];
+	std::function<void(int, int, int, int)> mouseMoveEvent;
 };
 
 #endif

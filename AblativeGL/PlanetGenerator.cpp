@@ -1,25 +1,5 @@
 #include "PlanetGenerator.h"
-
-void PlanetGenerator::MoveFoward()
-{
-	viewMatrix *= glm::translate(0.0f, 0.0f, 1.0f);
-}
-
-void PlanetGenerator::MoveBack()
-{
-	viewMatrix *= glm::translate(0.0f, 0.0f, -1.0f);
-}
-
-void PlanetGenerator::MoveLeft()
-{
-	worldMatrix = glm::rotate(worldMatrix, -0.1f, glm::vec3(0, 1, 0));
-}
-
-void PlanetGenerator::MoveRight()
-{
-	worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
-}
-
+#include "SphereMapping.h"
 void PlanetGenerator::Initialize()
 {
 	// Set window hints and context attributes here.
@@ -48,9 +28,16 @@ void PlanetGenerator::Initialize()
 	}
 }
 
+void PlanetGenerator::MouseMove(int x, int y, int relx, int rely)
+{
+	int relativex = x - WindowWidth()/2;
+	int relativey = y - WindowHeight()/2;
+	freelookCam.Orient(relativey/3.0f, relativex/3.0f);
+}
+
 void PlanetGenerator::LoadResources()
 {
-		planet = new Icosphere(7);	
+		planet = new Icosphere(8);	
 		camera = new Camera(WindowWidth(), WindowHeight());
 		effect = new Effect("diffuse.vert", "diffuse.frag");
 
@@ -82,8 +69,12 @@ void PlanetGenerator::LoadResources()
 
 		planet->GenerateNormals();
 
+		for(int i = 0; i < planet->GetNumberOfVertices(); i++)
+		{
+			cubizePoint2(vertices[i]);
+		}
+
 		worldMatrix = glm::scale(glm::vec3(1000, 1000, 1000));
-		viewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 1100.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glGenVertexArrays(1, &vao);
 		glBindVertexArray(vao);
@@ -105,14 +96,18 @@ void PlanetGenerator::LoadResources()
 		glEnableVertexAttribArray(3);
 		glEnable(GL_DEPTH_TEST);
 
-		input.RegisterKeyEvent(SDLK_w, std::bind(&PlanetGenerator::MoveFoward, this));
-		input.RegisterKeyEvent(SDLK_s, std::bind(&PlanetGenerator::MoveBack, this));
-		input.RegisterKeyEvent(SDLK_a, std::bind(&PlanetGenerator::MoveLeft, this));
-		input.RegisterKeyEvent(SDLK_d, std::bind(&PlanetGenerator::MoveRight, this));
+		freelookCam.Initialize(glm::vec3(0, 1, 0), glm::vec3(0, 0, 1), glm::vec3(0, 0, 3200));
+
+		input.RegisterKeyEvent(SDLK_w, std::bind(&FreelookCamera::MoveForward, &freelookCam));
+		input.RegisterKeyEvent(SDLK_s, std::bind(&FreelookCamera::MoveBackward, &freelookCam));
+		input.RegisterKeyEvent(SDLK_a, std::bind(&FreelookCamera::MoveLeft, &freelookCam));
+		input.RegisterKeyEvent(SDLK_d, std::bind(&FreelookCamera::MoveRight, &freelookCam));
+		input.RegisterMouseMoveEvent(std::bind(&PlanetGenerator::MouseMove, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 }
 
 void PlanetGenerator::PreRender()
 {
+	SDL_WarpMouseInWindow(window, WindowWidth() / 2, WindowHeight() / 2);
 	input.DoKeyEvents();
 }
 
@@ -124,7 +119,9 @@ void PlanetGenerator::Render()
 
 	//worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
 	glm::mat4 projection = glm::perspective(45.0f, (float)WindowWidth() / (float)WindowHeight(), 1.0f, 100000.0f);
-	glm::mat4 mvp = projection * viewMatrix * worldMatrix;
+	float angle = glm::dot(freelookCam.GetRight(), glm::normalize(freelookCam.Position()));
+	freelookCam.SetRoll(angle);
+	glm::mat4 mvp = projection * freelookCam.ViewMatrix() * worldMatrix;
 
 	effect->SetUniform("MVP", false, mvp);
 
@@ -137,24 +134,3 @@ void PlanetGenerator::PostRender()
 }
 
 void PlanetGenerator::UnloadResources(){}
-
-void PlanetGenerator::OnKeyDown(Uint8 state, SDL_Keysym key)
-{
-	switch(key.sym)
-	{
-		case SDLK_w:
-			viewMatrix *= glm::translate(0.0f, 0.0f, 1.0f);
-			break;
-		case SDLK_s:
-			viewMatrix *= glm::translate(0.0f, 0.0f, -1.0f);
-			break;
-		case SDLK_a:
-			worldMatrix = glm::rotate(worldMatrix, -0.1f, glm::vec3(0, 1, 0));
-			break;
-		case SDLK_d:
-			worldMatrix = glm::rotate(worldMatrix, 0.1f, glm::vec3(0, 1, 0));
-			break;
-		default:
-			break;
-	}
-}

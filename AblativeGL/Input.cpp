@@ -1,19 +1,7 @@
 #include "Input.h"
 
-bool Input::keyStates[512];
-
 Input::Input(void)
 {
-}
-
-void Input::KeyPressed(SDL_Keysym key)
-{
-	keyStates[key.scancode] = true;
-}
-
-void Input::KeyReleased(SDL_Keysym key)
-{
-	keyStates[key.scancode] = false;
 }
 
 void Input::RegisterKeyEvent(SDL_Keycode key, std::function<void()> action)
@@ -32,14 +20,34 @@ void Input::UnregisterKeyEvent(SDL_Keycode key)
 	}
 }
 
+void Input::RegisterMouseMoveEvent(std::function<void(int, int, int, int)> func)
+{
+	mouseMoveEvent = func;
+}
+
 void Input::DoKeyEvents()
 {
-	for(int i = 0; i < 512; i++)
+	int numOfKeys;
+	const Uint8* keyStates = SDL_GetKeyboardState(&numOfKeys);
+	int mouse_x;
+	int mouse_y;
+	int mouse_relx;
+	int mouse_rely;
+
+	SDL_GetMouseState(&mouse_x, &mouse_y);
+	SDL_GetRelativeMouseState(&mouse_relx, &mouse_rely);
+
+	if(mouseMoveEvent)
+	{
+		mouseMoveEvent(mouse_x, mouse_y, mouse_relx, mouse_rely);
+	}
+
+	for(int i = 0; i < numOfKeys; i++)
 	{
 		if(keyStates[i])
 		{
-			//calls the function with the assocaited scan code
-			auto it = function_map.find((const SDL_Scancode)i);
+			//calls the function with the associated scan code
+			auto it = function_map.find((SDL_Scancode)i);
 			if(it != function_map.end())
 			{
 				it->second();

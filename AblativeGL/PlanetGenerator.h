@@ -3,6 +3,7 @@
 
 #include "Simulation.h"
 #include "Camera.h"
+#include "FreelookCamera.h"
 #include "Effect.h"
 #include <noise/noise.h>
 #include "Icosphere.h"
@@ -19,16 +20,11 @@ class PlanetGenerator : public Simulation
 		virtual void PostRender();
 		virtual void UnloadResources();
 
-		virtual void OnKeyDown(Uint8, SDL_Keysym);
-
-		void MoveFoward();
-		void MoveBack();
-		void MoveLeft();
-		void MoveRight();
+		void MouseMove(int x, int y, int relx, int rely);
 
 	private:
+		FreelookCamera freelookCam;
 		glm::mat4 worldMatrix;
-		glm::mat4 viewMatrix;
 		Input input;
 		GLuint vao;
 		GLuint vbo[3];
